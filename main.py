@@ -1,0 +1,85 @@
+from flask import Flask
+from flask import render_template, request
+from flask_login import LoginManager
+import psycopg
+from psycopg.rows import dict_row
+from dotenv import load_dotenv
+import os
+from flask_bootstrap import Bootstrap
+
+# .envファイルの読み込み
+load_dotenv()
+
+# Flaskアプリケーションの作成
+app = Flask(__name__)
+
+# Flask-Bootstrapの初期化
+bootstrap = Bootstrap(app)  
+
+# データベース接続
+def connect_db():
+    return psycopg.connect(
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT'),
+        row_factory=dict_row  # クエリ結果を辞書形式で取得
+    )
+
+# アンケート画面
+@app.route('/')
+def index():
+    
+    # データベースから行事名、演目、来場きっかけを取得
+    with connect_db() as conn:
+        with conn.cursor() as cur:  # カーソルの作成
+            try:
+                cur.execute("SELECT event_name FROM events ORDER BY event_id DESC LIMIT 1;")
+                db_event = cur.fetchone()   # 行事名の取得（辞書）
+                cur.execute("SELECT performance_name FROM performances;")
+                db_performances = cur.fetchall()    # 演目の取得（辞書）
+                cur.execute("SELECT chance_text FROM chances;")
+                db_chances = cur.fetchall()    # 来場きっかけの取得（辞書）
+            except Exception as e:
+                print('データ保存に失敗', e)
+                return 'データ保存に失敗', 500
+    
+    # 取得したデータをindex.htmlに渡す
+    event_name = db_event['event_name']
+    per_name = [per['performance_name'] for per in db_performances]
+    chan_text = [chan['chance_text'] for chan in db_chances]
+    return render_template('index.html', event_name=event_name, per_name=per_name, chan_text=chan_text)
+
+# アンケート送信処理
+@app.route('/answered', methods=['POST'])
+def answered():
+    
+    # フォームからのデータをデータベースに格納
+    with connect_db() as conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute("SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1;")
+                event_id = cur.fetchone()['event_id']
+                performance = request.form.get('performance')  # 演目の選択(idで取得)
+                chance = request.form.get('chance')  # 来場きっかけの選択(idで取得)
+                rating = request.form.get('rating')  # 総評の選択
+                answer_text = request.form.get('feedback')  # 感想の取得
+                cur.execute(
+                    "INSERT INTO answers(event_id, performance_id, chance_id, answer_eval, answer_text, answer_time) VALUES (%s, %s, %s, %s, %s, NOW());",
+                    (event_id, performance, chance, rating, answer_text)
+                )
+            except Exception as e:
+                print('データ保存に失敗', e)
+                return 'データ保存に失敗', 500
+    return render_template('answered.html')
+
+# 部員ログイン
+@app.route('/login')
+def login():
+    pass  # ログイン処理は未実装
+
+# アンケート回答集
+@app.route('/results')
+def results():
+    pass  # 結果表示処理は未実装

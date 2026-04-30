@@ -1,0 +1,13 @@
+[project]
+name = "dramaquestionnaire"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask",
+    "flask-bootstrap>=3.3.7.1",
+    "flask-login>=0.6.3",
+    "psycopg>=3.3.3",
+    "python-dotenv>=1.2.2",
+]

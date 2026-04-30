@@ -1,0 +1,77 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}アンケート回答{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1>演劇部 観劇後アンケート</h1>
+    <a href="/login" role="button" class="btn btn-secondary mb-3">部員用</a>
+    <p>本日は演劇部の公演をご覧いただき、有り難うございました。</p>
+    <p>
+        皆様の率直なご意見・ご感想を参考に日々向上して参りたいと思います。
+        お忙しい中お手数をおかけしますが、ぜひアンケートにご協力をお願いします。
+    </p>
+
+    <form method="POST" action="/answered">
+        <h3 class="mb-4" name="event_name" value="{{ event_name }}">{{ event_name }}</h3>
+
+        <label class="form-label fw-bold mb-3">Q1. ご覧になった公演を選択してください</label>
+            {% for per in per_name%}
+            <div class="form-check">
+                <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="performance" 
+                    id="per{{ loop.index }}"
+                    value="{{ loop.index }}"
+                    required>
+                <label class="form-check-label" for="per{{ loop.index }}">
+                   {{ per }}
+                </label>
+            </div>
+            {% endfor %}
+        <br>
+
+        <label class="form-label fw-bold mb-3">Q2. ご来場のきっかけを教えてください</label>
+            {% for chan in chan_text%}
+            <div class="form-check">
+                <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="chance" 
+                    id="chan{{ loop.index }}"
+                    value="{{ loop.index }}"
+                    required>
+                <label class="form-check-label" for="chan{{ loop.index }}">
+                    {{ chan }}
+                </label>
+            </div>
+            {% endfor %}
+        <br>
+
+        <label class="form-label fw-bold">Q3. 総評を５段階で選んでください</label>
+            <p>あまり良くなかった</p>
+            {% for i in range(1, 6) %}
+            <div class="form-check">
+                <label class="form-check-label" for="{{ i }}">{{ i }}</label>
+                <input
+                    class="form-check-input"
+                    type="radio"
+                    name="rating"
+                    id ="{{ i }}"
+                    value="{{ i }}"
+                    required>
+            </div>
+            {% endfor %}
+            <p>とても良かった</p>
+        <br>
+
+        <div class="mb-3">
+            <label for="feedback" class="form-label">Q4. 今回の劇について感想をお願いします（任意）</label>
+            <textarea class="form-control" id="feedback" name="feedback" rows="4" ></textarea>
+        </div>
+        <br>
+
+        <button type="submit" class="btn btn-primary">回答を送信する</button>
+    </form>
+    </div>
+{% endblock %}
