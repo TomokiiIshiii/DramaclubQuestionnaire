@@ -1,11 +1,12 @@
 from flask import Flask
-from flask import render_template, request
-from flask_login import LoginManager
+from flask import render_template, request, redirect
+from flask_login import LoginManager, login_user, UserMixin, login_required
 import psycopg
 from psycopg.rows import dict_row
 from dotenv import load_dotenv
 import os
 from flask_bootstrap import Bootstrap
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # .envファイルの読み込み
 load_dotenv()
@@ -13,8 +14,23 @@ load_dotenv()
 # Flaskアプリケーションの作成
 app = Flask(__name__)
 
+app.secret_key = os.getenv('SECRET_KEY')
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id == os.getenv('LOGIN_USER'):
+        return User(user_id)
+    return None
+
 # Flask-Bootstrapの初期化
-bootstrap = Bootstrap(app)  
+bootstrap = Bootstrap(app)
 
 # データベース接続
 def connect_db():
@@ -51,6 +67,7 @@ def index():
     chan_text = [chan['chance_text'] for chan in db_chances]
     return render_template('index.html', event_name=event_name, per_name=per_name, chan_text=chan_text)
 
+
 # アンケート送信処理
 @app.route('/answered', methods=['POST'])
 def answered():
@@ -74,12 +91,24 @@ def answered():
                 return 'データ保存に失敗', 500
     return render_template('answered.html')
 
-# 部員ログイン
-@app.route('/login')
-def login():
-    pass  # ログイン処理は未実装
 
+# 部員ログイン
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == os.getenv('LOGIN_USER') and check_password_hash(os.getenv('LOGIN_PASSWORD_HASH'), password):
+            user = User(id=1)
+            login_user(user)
+            return render_template('results.html')
+        else:
+            return render_template('login.html', error='ユーザー名またはパスワードが間違っています')
+        
 # アンケート回答集
 @app.route('/results')
+@login_required
 def results():
-    pass  # 結果表示処理は未実装
+    return render_template('results.html')

@@ -1,0 +1,21 @@
+{% extends "bootstrap/base.html" %}
+{% block title %} 部員ログイン {% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1>部員ログイン</h1>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+    <form method="POST">
+        <label for="" class="form-label">ユーザー名</label>
+        <input type="text" name="username" class="form-control">
+        <label for="password" class="form-label">パスワード</label>
+        <input type="password" name="password" class="form-control">
+        <input type="submit" value="ログイン" class="btn btn-primary">
+    </form>
+</div>
+
+{% endblock %}
