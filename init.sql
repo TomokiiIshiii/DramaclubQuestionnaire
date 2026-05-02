@@ -31,7 +31,7 @@ CREATE TABLE answers(
 INSERT INTO events (event_id, event_name) VALUES (1, '文化の祭典2026');
 
 INSERT INTO performances (event_id, performance_id, performance_name) 
-VALUES (1, 1, 'club Rain ～それは今宵限りの夢物語'), (1, 2, 'コロナ禍のヤクザ'), (1, 3, '雪解け');
+VALUES (1, 1, 'club Rain'), (1, 2, 'コロナ禍のヤクザ'), (1, 3, '雪解け');
 
 INSERT INTO chances (chance_id, chance_text)
 VALUES (1, 'ポスターから'), (2, 'SNSから'), (3, '友人から'), (4, 'OB・OG'), (5, 'その他');

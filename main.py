@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from flask_login import LoginManager, login_user, UserMixin, login_required
 import psycopg
 from psycopg.rows import dict_row
@@ -101,14 +101,34 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         if username == os.getenv('LOGIN_USER') and check_password_hash(os.getenv('LOGIN_PASSWORD_HASH'), password):
-            user = User(id=1)
+            user = User(id=username)
             login_user(user)
-            return render_template('results.html')
+            return redirect(url_for('results'))
         else:
             return render_template('login.html', error='ユーザー名またはパスワードが間違っています')
         
 # アンケート回答集
-@app.route('/results')
+@app.route('/results', methods=['GET', 'POST'])
 @login_required
 def results():
-    return render_template('results.html')
+    # 最初：最新の行事のアンケート回答を表示、以降：選択された行事のアンケート回答を表示
+    if request.method == 'POST':
+        event_id = request.form.get('event_id')
+    with connect_db() as conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute("SELECT * FROM events;")
+                events = cur.fetchall()
+                cur.execute(f'''
+                            SELECT per.performance_name, chan.chance_text, ans.answer_eval, ans.answer_text
+                            FROM answers AS ans
+                            RIGHT OUTER JOIN performances AS per ON ans.performance_id = per.performance_id
+                            RIGHT OUTER JOIN chances AS chan ON  ans.chance_id = chan.chance_id
+                            WHERE ans.event_id=(SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1);
+                            ''')
+                answers = cur.fetchall()
+                print(answers)
+            except Exception as e:
+                print('データの取得に失敗', e)
+                return 'データの取得に失敗', 500
+    return render_template('results.html', answers=answers, events=events)

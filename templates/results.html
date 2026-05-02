@@ -1,5 +1,41 @@
 {% extends "bootstrap/base.html" %}
 {% block title %} アンケート結果 {% endblock %}
+
 {% block content %}
-aaa
+<div class="container">
+    <h1>アンケート結果</h1>
+    
+    <form method="POST">
+        <select class="form-select form-select-lg mb-3" aria-label="Large select example">
+            {% for event in events %}
+            <option name="event_id" value="{{ event.event_id }}">{{ event.event_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-secondary">表示する</button>
+    </form>
+
+    <table class="table table-light table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">公演</th>
+                <th scope="col">来場きっかけ</th>
+                <th scope="col">総評(1~5)</th>
+                <th scope="col">感想</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ans in answers %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <th scope="row">{{ ans['performance_name'] }}</th>
+                <th scope="row">{{ ans['chance_text'] }}</th>
+                <th scope="row">{{ ans['answer_eval'] }}</th>
+                <th scope="row">{{ ans['answer_text'] }}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
 {% endblock %}
