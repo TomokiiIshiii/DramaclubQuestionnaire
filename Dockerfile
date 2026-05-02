@@ -4,13 +4,13 @@ WORKDIR /app
 
 # Python と uv のインストール
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.12 python3-pip curl && \
-    curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    /root/.cargo/bin/uv --version && \
+    python3 python3-pip curl && \
+    python3 -m pip install --break-system-packages uv && \
+    uv --version && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH="/root/.cargo/bin:$PATH"
+ENV PATH="/usr/local/bin:$PATH"
 
 # pyproject.toml と uv.lock のコピー
 COPY pyproject.toml uv.lock* ./
