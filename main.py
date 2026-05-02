@@ -53,19 +53,19 @@ def index():
             try:
                 cur.execute("SELECT event_name FROM events ORDER BY event_id DESC LIMIT 1;")
                 db_event = cur.fetchone()   # 行事名の取得（辞書）
-                cur.execute("SELECT performance_name FROM performances;")
+                if db_event is None:
+                    return '行事が見つかりませんでした  ', 500
+                cur.execute("SELECT performance_id, performance_name FROM performances;")
                 db_performances = cur.fetchall()    # 演目の取得（辞書）
-                cur.execute("SELECT chance_text FROM chances;")
+                cur.execute("SELECT chance_id, chance_text FROM chances;")
                 db_chances = cur.fetchall()    # 来場きっかけの取得（辞書）
             except Exception as e:
-                print('データ保存に失敗', e)
-                return 'データ保存に失敗', 500
+                print('データ取得に失敗', e)
+                return 'データ取得に失敗', 500
     
     # 取得したデータをindex.htmlに渡す
     event_name = db_event['event_name']
-    per_name = [per['performance_name'] for per in db_performances]
-    chan_text = [chan['chance_text'] for chan in db_chances]
-    return render_template('index.html', event_name=event_name, per_name=per_name, chan_text=chan_text)
+    return render_template('index.html', event_name=event_name, performances=db_performances, chances=db_chances)
 
 
 # アンケート送信処理
@@ -77,11 +77,16 @@ def answered():
         with conn.cursor() as cur:
             try:
                 cur.execute("SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1;")
-                event_id = cur.fetchone()['event_id']
-                performance = request.form.get('performance')  # 演目の選択(idで取得)
-                chance = request.form.get('chance')  # 来場きっかけの選択(idで取得)
-                rating = request.form.get('rating')  # 総評の選択
+                event_row = cur.fetchone()
+                if event_row is None:
+                    return '行事が見つかりませんでした', 500
+                event_id = event_row['event_id']
+                performance = int(request.form.get('performance'))  # 演目の選択(idで取得)
+                chance = int(request.form.get('chance'))  # 来場きっかけの選択(idで取得)
+                rating = int(request.form.get('rating'))  # 総評の選択
                 answer_text = request.form.get('feedback')  # 感想の取得
+                if not performance or not chance or not rating:
+                    return '入力が不正です', 400
                 cur.execute(
                     "INSERT INTO answers(event_id, performance_id, chance_id, answer_eval, answer_text, answer_time) VALUES (%s, %s, %s, %s, %s, NOW());",
                     (event_id, performance, chance, rating, answer_text)
@@ -132,7 +137,7 @@ def results():
                         LEFT OUTER JOIN performances AS per ON ans.performance_id = per.performance_id
                         LEFT OUTER JOIN chances AS chan ON  ans.chance_id = chan.chance_id
                         WHERE ans.event_id= %s 
-                        ORDER BY ans.answer_time DESC;
+                        ORDER BY ans.answer_time;
                     '''
                 cur.execute(query, (event_id,))
                 answers = cur.fetchall()

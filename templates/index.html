@@ -15,34 +15,34 @@
         <h3 class="mb-4" name="event_name" value="{{ event_name }}">{{ event_name }}</h3>
 
         <label class="form-label fw-bold mb-3">Q1. ご覧になった公演を選択してください</label>
-            {% for per in per_name%}
+            {% for per in performances%}
             <div class="form-check">
                 <input 
                     class="form-check-input" 
                     type="radio" 
                     name="performance" 
                     id="per{{ loop.index }}"
-                    value="{{ loop.index }}"
+                    value="{{ per['performance_id'] }}"
                     required>
                 <label class="form-check-label" for="per{{ loop.index }}">
-                   {{ per }}
+                   {{ per['performance_name'] }}
                 </label>
             </div>
             {% endfor %}
         <br>
 
         <label class="form-label fw-bold mb-3">Q2. ご来場のきっかけを教えてください</label>
-            {% for chan in chan_text%}
+            {% for chan in chances%}
             <div class="form-check">
                 <input 
                     class="form-check-input" 
                     type="radio" 
                     name="chance" 
                     id="chan{{ loop.index }}"
-                    value="{{ loop.index }}"
+                    value="{{ chan['chance_id'] }}"
                     required>
                 <label class="form-check-label" for="chan{{ loop.index }}">
-                    {{ chan }}
+                    {{ chan['chance_text'] }}
                 </label>
             </div>
             {% endfor %}
