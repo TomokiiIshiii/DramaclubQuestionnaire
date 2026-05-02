@@ -1,4 +1,8 @@
 {% extends "bootstrap/base.html" %}
+{% block styles %}
+{{ super() }}
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+{% endblock %}
 {% block title %} アンケート結果 {% endblock %}
 
 {% block content %}

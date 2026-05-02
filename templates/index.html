@@ -1,10 +1,16 @@
 {% extends "bootstrap/base.html" %}
+{% block styles %}
+{{ super() }}
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+{% endblock %}
 {% block title %}アンケート回答{% endblock %}
 {% block content %}
 
 <div class="container">
-    <h1>演劇部 観劇後アンケート</h1>
-    <a href="/login" role="button" class="btn btn-secondary mb-3">部員用</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>演劇部 観劇後アンケート</h1>
+        <a href="/login" role="button" class="btn btn-secondary">部員用</a>
+    </div>
     <p>本日は演劇部の公演をご覧いただき、有り難うございました。</p>
     <p>
         皆様の率直なご意見・ご感想を参考に日々向上して参りたいと思います。
@@ -36,7 +42,7 @@
             <div class="form-check">
                 <input 
                     class="form-check-input" 
-                    type="radio" 
+                    type="radio"    
                     name="chance" 
                     id="chan{{ loop.index }}"
                     value="{{ chan['chance_id'] }}"
