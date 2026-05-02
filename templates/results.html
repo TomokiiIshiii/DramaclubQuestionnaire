@@ -5,15 +5,17 @@
 <div class="container">
     <h1>アンケート結果</h1>
     
-    <form method="POST">
-        <select class="form-select form-select-lg mb-3" aria-label="Large select example">
+    <form method="POST" action="/results">
+        <label for="event_id" class="form-label">行事を選択：</label>
+        <select name="event_id" class="form-select form-select-lg mb-3" >
             {% for event in events %}
-            <option name="event_id" value="{{ event.event_id }}">{{ event.event_name }}</option>
+            <option value="{{ event.event_id }}">{{ event.event_name }}</option>
             {% endfor %}
         </select>
         <button type="submit" class="btn btn-secondary">表示する</button>
     </form>
-
+    
+    <h4>現在の回答一覧：{{ current_event }}</h4>
     <table class="table table-light table-striped table-hover">
         <thead>
             <tr>

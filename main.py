@@ -112,23 +112,32 @@ def login():
 @login_required
 def results():
     # 最初：最新の行事のアンケート回答を表示、以降：選択された行事のアンケート回答を表示
-    if request.method == 'POST':
-        event_id = request.form.get('event_id')
     with connect_db() as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute("SELECT * FROM events;")
                 events = cur.fetchall()
-                cur.execute(f'''
-                            SELECT per.performance_name, chan.chance_text, ans.answer_eval, ans.answer_text
-                            FROM answers AS ans
-                            RIGHT OUTER JOIN performances AS per ON ans.performance_id = per.performance_id
-                            RIGHT OUTER JOIN chances AS chan ON  ans.chance_id = chan.chance_id
-                            WHERE ans.event_id=(SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1);
-                            ''')
+                
+                if request.method == 'POST':
+                    event_id = request.form.get('event_id')
+                    current_event = next((event['event_name'] for event in events if event['event_id']==int(event_id)), None)
+                else:
+                    cur.execute("SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1;")
+                    event_id = cur.fetchone()['event_id']
+                    current_event = next((event['event_name'] for event in events if event['event_id']==int(event_id)), None)
+                
+                query = '''
+                        SELECT per.performance_name, chan.chance_text, ans.answer_eval, ans.answer_text
+                        FROM answers AS ans
+                        LEFT OUTER JOIN performances AS per ON ans.performance_id = per.performance_id
+                        LEFT OUTER JOIN chances AS chan ON  ans.chance_id = chan.chance_id
+                        WHERE ans.event_id= %s 
+                        ORDER BY ans.answer_time DESC;
+                    '''
+                cur.execute(query, (event_id,))
                 answers = cur.fetchall()
-                print(answers)
+
             except Exception as e:
                 print('データの取得に失敗', e)
                 return 'データの取得に失敗', 500
-    return render_template('results.html', answers=answers, events=events)
+    return render_template('results.html', answers=answers, events=events, current_event=current_event)
