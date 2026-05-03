@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 5000
 
 # Flask アプリの起動(gunicorn を使用)
-CMD ["uv", "run", "gunicorn", "--bind", "0.0.0.0:$PORT", "main:app"]
+CMD uv run gunicorn --bind 0.0.0.0:$PORT main:app

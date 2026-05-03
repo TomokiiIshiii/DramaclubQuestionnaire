@@ -146,3 +146,8 @@ def results():
                 print('データの取得に失敗', e)
                 return 'データの取得に失敗', 500
     return render_template('results.html', answers=answers, events=events, current_event=current_event)
+
+if __name__ == '__main__':
+    # 環境変数PORTが設定されていない場合は5000を使用
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
