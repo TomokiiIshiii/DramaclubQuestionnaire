@@ -8,5 +8,7 @@ wheels/
 .env
 hash.py
 
+memo.txt
+
 # Virtual environments
 .venv

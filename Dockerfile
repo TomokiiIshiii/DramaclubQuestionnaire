@@ -23,5 +23,5 @@ COPY . .
 
 EXPOSE 5000
 
-# Flask アプリの起動
-CMD ["uv", "run", "flask", "--app", "main", "run", "--host", "0.0.0.0"]
+# Flask アプリの起動(gunicorn を使用)
+CMD ["uv", "run", "gunicorn", "--bind", "0.0.0.0:$PORT", "main:app"]

@@ -8,6 +8,7 @@ dependencies = [
     "flask",
     "flask-bootstrap>=3.3.7.1",
     "flask-login>=0.6.3",
+    "gunicorn>=25.3.0",
     "psycopg>=3.3.3",
     "python-dotenv>=1.2.2",
     "werkzeug>=3.1.8",
