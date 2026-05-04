@@ -16,12 +16,13 @@
         お忙しい中お手数をおかけしますが、ぜひアンケートにご協力をお願いします。
     </p>
 
-    <a href="/login" role="button">部員用ログイン</a>
-    
-    <form method="POST" action="/answered">
-        <h3 class="mb-4" name="event_name" value="{{ event_name }}">{{ event_name }}</h3>
+    <a href="/login" role="button">部員はこちら</a>
 
-        <label class="form-label fw-bold mb-3">Q1. ご覧になった公演を選択してください</label>
+    <hr class="my-4">
+    
+    <form method="POST" action="/answered" class="questionnaire-form">
+   
+        <label class="form-label fw-bold mb-3 question">Q1. ご覧になった公演を選択してください</label>
             {% for per in performances%}
             <div class="form-check">
                 <input 
@@ -38,7 +39,7 @@
             {% endfor %}
         <br>
 
-        <label class="form-label fw-bold mb-3">Q2. ご来場のきっかけを教えてください</label>
+        <label class="form-label fw-bold mb-3 question">Q2. ご来場のきっかけを教えてください</label>
             {% for chan in chances%}
             <div class="form-check">
                 <input 
@@ -55,7 +56,7 @@
             {% endfor %}
         <br>
 
-        <label class="form-label fw-bold">Q3. 総評を５段階で選んでください</label>
+        <label class="form-label fw-bold question">Q3. 総評を５段階で選んでください</label>
             <p>あまり良くなかった</p>
             {% for i in range(1, 6) %}
             <div class="form-check">
@@ -73,7 +74,7 @@
         <br>
 
         <div class="mb-3">
-            <label for="feedback" class="form-label">Q4. 今回の劇について感想をお願いします（任意）</label>
+            <label for="feedback" class="form-label question">Q4. 今回の劇について感想をお願いします（任意）</label>
             <textarea class="form-control" id="feedback" name="feedback" rows="4" ></textarea>
         </div>
         <br>

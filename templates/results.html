@@ -16,32 +16,34 @@
             <option value="{{ event.event_id }}">{{ event.event_name }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn btn-secondary">表示する</button>
+        <button type="submit" class="btn-secondary">表示する</button>
     </form>
     
     <h4>現在の回答一覧：{{ current_event }}</h4>
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">公演</th>
-                <th scope="col">来場きっかけ</th>
-                <th scope="col">総評(1~5)</th>
-                <th scope="col">感想</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ans in answers %}
-            <tr>
-                <th scope="row">{{ loop.index }}</th>
-                <th scope="row">{{ ans['performance_name'] }}</th>
-                <th scope="row">{{ ans['chance_text'] }}</th>
-                <th scope="row">{{ ans['answer_eval'] }}</th>
-                <th scope="row">{{ ans['answer_text'] }}</th>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">公演</th>
+                    <th scope="col">来場きっかけ</th>
+                    <th scope="col">総評(1~5)</th>
+                    <th scope="col">感想</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ans in answers %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <th scope="row">{{ ans['performance_name'] }}</th>
+                    <th scope="row">{{ ans['chance_text'] }}</th>
+                    <th scope="row">{{ ans['answer_eval'] }}</th>
+                    <th scope="row">{{ ans['answer_text'] }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </div>
 {% endblock %}

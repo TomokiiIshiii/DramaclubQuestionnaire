@@ -25,6 +25,11 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
+h1{
+    font-size: 32px;
+    background:linear-gradient(transparent 60%, #d9f5c7 60%) ;
+}
+
 /* フォームのスタイル */
 .form-label {
     font-weight: 500;
@@ -59,8 +64,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ボタンのスタイル */
 .btn {
     border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 20px 20px;
+    font-size: 20px;
     font-weight: 500;
     text-decoration: none;
     display: inline-block;
@@ -79,9 +84,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary {
-    background-color: #6c757d;
+    background-color: #709dc4;
     border-color: #6c757d;
-    color: #fff;
+    color: #f4f2f2;
+    border-radius: 4px;
 }
 
 .btn-secondary:hover {
@@ -90,10 +96,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* テーブルのスタイル */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+}
+
 .table {
     width: 100%;
     margin-bottom: 20px;
     border-collapse: collapse;
+    min-width: 720px;
 }
 
 .table th,
@@ -101,6 +115,10 @@ h1, h2, h3, h4, h5, h6 {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #dee2e6;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .table thead th {
@@ -171,4 +189,29 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+hr {
+    border: 1px solid #48494a;
+}
+
+.question {
+    font-weight: bold;
+    background:linear-gradient(transparent 60%, #eff9e9 60%) ;
+}
+
+.questionnaire-form {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.questionnaire-form .form-label {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+button {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 10px 0;
 }
