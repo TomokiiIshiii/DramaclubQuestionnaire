@@ -198,11 +198,12 @@ hr {
 .question {
     font-weight: bold;
     background:linear-gradient(transparent 60%, #eff9e9 60%) ;
+    font-size: 16px;
 }
 
 .questionnaire-form {
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .questionnaire-form .form-label {
