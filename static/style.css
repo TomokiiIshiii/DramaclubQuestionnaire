@@ -195,6 +195,10 @@ hr {
     border: 1px solid #48494a;
 }
 
+.answer-text {
+    font-weight: bold;
+}
+
 .question {
     font-weight: bold;
     background:linear-gradient(transparent 60%, #eff9e9 60%) ;
